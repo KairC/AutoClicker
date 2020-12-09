@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityFeedbackType="feedbackAllMask"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="true"
+    android:canPerformGestures="true"/>
+
+    <!-- android:accessibilityEventTypes="typeAllMask" (要接收的event 類型)
+        The event types this service would like to receive as specified in AccessibilityEvent.
+        "typeAllMask" means all event types.
+     -->
+
+    <!-- android:accessibilityFeedbackType="feedbackAllMask" (針對接收的event,要做出哪種feedback)
+        The feedback types this service provides as specified in AccessibilityServiceInfo.
+        "feedbackAllMask" means all feedback types.
+    -->
+
+    <!-- android:canRetrieveWindowContent="true"    (允許accessibility獲得視窗的內容)
+        Attribute whether the accessibility service wants to be able to retrieve the active window content. This setting cannot be changed at runtime.
+
+    -->
+
+    <!-- android:canPerformGestures="true" (允許accessibility做出手勢, e.g. click、swipe、...)
+        Attribute whether the accessibility service wants to be able to perform gestures.
+
+    -->
