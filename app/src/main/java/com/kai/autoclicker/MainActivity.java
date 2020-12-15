@@ -10,13 +10,14 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.widget.RadioButton;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private Button mStart;
     private EditText mInterval;
-    private RadioGroup mCheckMode;
+    private RadioButton mTapMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +40,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mStart = findViewById(R.id.start);
         mInterval = findViewById(R.id.interval);
-        mCheckMode = findViewById(R.id.check_mode);
+        mTapMode = findViewById(R.id.tap);
         mStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(MainActivity.this, AutoService.class);
                 intent.putExtra(AutoService.ACTION, AutoService.SHOW);
-                intent.putExtra("interval", Integer.valueOf(mInterval.getText().toString()));
-                int id = mCheckMode.getCheckedRadioButtonId();
-                intent.putExtra(AutoService.MODE, id == R.id.swipe ? AutoService.SWIPE : AutoService.TAP);
-
+                String interval = mInterval.getText().toString();
+                intent.putExtra("interval", Integer.valueOf(!interval.isEmpty()?interval:"10"));
+                intent.putExtra(AutoService.MODE, AutoService.TAP);
 
                 startService(intent);
 

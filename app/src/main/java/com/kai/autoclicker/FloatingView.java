@@ -24,12 +24,11 @@ public class FloatingView extends FrameLayout implements View.OnClickListener {
     private int mTouchStartX, mTouchStartY;
     private WindowManager.LayoutParams mParams;
     private WindowManager.LayoutParams mParams2;
-    private FloatingManager mWindowManager;
+  private WindowManager mWindowManager;
     private String mCurState;
     public FloatingView(Context context) {
         super(context);
         mContext = context.getApplicationContext();
-        // LayoutInflater mLayoutInflater = LayoutInflater.from(context);
         LayoutInflater mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mView = mLayoutInflater.inflate(R.layout.floating_view, null);
 
@@ -45,7 +44,7 @@ public class FloatingView extends FrameLayout implements View.OnClickListener {
         mStopView.setOnClickListener(this);
         mCloseView.setOnClickListener(this);
         mView.setOnTouchListener(mOnTouchListener);
-        mWindowManager = FloatingManager.getInstance(mContext);
+        mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
     }
 
     public void show() {
@@ -59,8 +58,7 @@ public class FloatingView extends FrameLayout implements View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
         mParams.width = LayoutParams.WRAP_CONTENT;
         mParams.height = LayoutParams.WRAP_CONTENT;
-        boolean result = mWindowManager.addView(mView, mParams);
-
+        mWindowManager.addView(mView, mParams);
         /*************** option bar which to play,stop,close ***************/
         mParams2 = new WindowManager.LayoutParams();
         mParams2.gravity = Gravity.LEFT;
@@ -70,11 +68,10 @@ public class FloatingView extends FrameLayout implements View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR;
         mParams2.width = LayoutParams.WRAP_CONTENT;
         mParams2.height = LayoutParams.WRAP_CONTENT;
-        boolean result2 = mWindowManager.addView(mView2, mParams2);
+        mWindowManager.addView(mView2, mParams2);
         /********************************************************************/
         Log.e(ACTIVITY_TAG,"addView");
         Log.e(ACTIVITY_TAG,"The beginning position is : (" + mParams.x + "," + mParams.y+ ")");
-        Toast.makeText(getContext(), "FloatingView1" + result +"\n" + "FloatingView2" + result2, Toast.LENGTH_LONG).show();
 
     }
 
@@ -113,7 +110,7 @@ public class FloatingView extends FrameLayout implements View.OnClickListener {
                         Log.e(ACTIVITY_TAG,"mTouchStartX :" + mTouchStartX);
                         Log.e(ACTIVITY_TAG,"mTouchStartY :" + mTouchStartY);
                         Log.e(ACTIVITY_TAG,"Coordinate now is: (" + mParams.x + "," + mParams.y + ")");
-                        mWindowManager.updateView(mView, mParams);
+                        mWindowManager.updateViewLayout(mView,mParams);
                         mTouchStartX = (int) event.getRawX();
                         mTouchStartY = (int) event.getRawY();
                     }
@@ -133,8 +130,8 @@ public class FloatingView extends FrameLayout implements View.OnClickListener {
 
                 mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
                         WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR |
-                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;;  //把mView設為FLAG_NOT_TOUCHABLE，就能讓Touch Event穿過該image view，而不會被攔截
-                mWindowManager.updateView(mView,mParams);
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;  //把mView設為FLAG_NOT_TOUCHABLE，就能讓Touch Event穿過該image view，而不會被攔截
+                mWindowManager.updateViewLayout(mView,mParams);
                 mCurState = AutoService.PLAY;
                 int[] location = new int[2];
                 mView.getLocationOnScreen(location);
@@ -148,7 +145,7 @@ public class FloatingView extends FrameLayout implements View.OnClickListener {
                 mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR |
                         WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-                mWindowManager.updateView(mView,mParams);
+                mWindowManager.updateViewLayout(mView,mParams);
                 mCurState = AutoService.STOP;
                 intent.putExtra(AutoService.ACTION, AutoService.STOP);
                 break;

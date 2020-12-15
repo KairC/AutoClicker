@@ -46,9 +46,10 @@ public class AutoService extends AccessibilityService {
         if (intent != null) {
             String action = intent.getStringExtra(ACTION);
             if (SHOW.equals(action)) {
-                mInterval = intent.getIntExtra("interval", 16) * 1000;
+                mInterval = intent.getIntExtra("interval", 10) * 1000;
                 mMode = intent.getStringExtra(MODE);
                 mFloatingView.show();
+                Toast.makeText(getBaseContext(), "Your click interval is "+mInterval/1000+" sec.", Toast.LENGTH_LONG).show();
             } else if (HIDE.equals(action)) {
                 mFloatingView.hide();
                 mHandler.removeCallbacksAndMessages(null);
@@ -69,11 +70,9 @@ public class AutoService extends AccessibilityService {
         }
         return super.onStartCommand(intent, flags, startId); //returning super.onStartCommand() is equivalent to returning START_STICKY
     }
-    private void playTap(int x, int y) {
+    private void Tapping(int x, int y) {
         Path path = new Path();
         path.moveTo(x, y);
-
- //       path.lineTo(x+3, y+3);
         GestureDescription.Builder builder = new GestureDescription.Builder();
         GestureDescription.StrokeDescription clickstroke = new GestureDescription.StrokeDescription(path, 0, 50);
         builder.addStroke(clickstroke);
@@ -98,35 +97,10 @@ public class AutoService extends AccessibilityService {
         Log.e(ACTIVITY_TAG,"The result is " + isDispatch);
     }
 
-    private void playSwipe(int fromX, int fromY, int toX, int toY) {
-        Path path = new Path();
-        path.moveTo(fromX, fromY);
-        path.lineTo(toX, toY);
-        GestureDescription.Builder builder = new GestureDescription.Builder();
-        builder.addStroke(new GestureDescription.StrokeDescription(path, 100L, 100L));
-        GestureDescription gestureDescription = builder.build();
-        dispatchGesture(gestureDescription, new GestureResultCallback() {
-            @Override
-            public void onCompleted(GestureDescription gestureDescription) {
-                super.onCompleted(gestureDescription);
-                mHandler.postDelayed(mRunnable, mInterval);
-            }
-
-            @Override
-            public void onCancelled(GestureDescription gestureDescription) {
-                super.onCancelled(gestureDescription);
-            }
-        }, null);
-    }
-
     private class IntervalRunnable implements Runnable {
         @Override
         public void run() {
-            if (SWIPE.equals(mMode)) {
-                playSwipe(mX, mY, mX, mY - 300);
-            } else {
-                playTap(mX, mY);
-            }
+                Tapping(mX, mY);
         }
     }
 
